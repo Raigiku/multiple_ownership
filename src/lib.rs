@@ -86,27 +86,27 @@ mod tests {
 
         assert_eq!(*list.front().unwrap(), 1);
 
-        list.insert_after(3, |val| *val == 1);
+        list.insert_if(3, |val| *val == 1);
         let supposed_node = list.head.as_ref().and_then(|x| x.next.as_ref());
-        if let Some(node) = supposed_node {
-            assert_eq!(node.value, 3)
-        }
+        assert_eq!(supposed_node.unwrap().value, 3);
 
-        // erase_after
-        // let query_value = 1;
-        // let mut it = list.head.as_mut();
-        // while let Some(node) = it {
-        //     if let Some(ref mut query_node) = node.next {
-        //         if query_node.value == query_value {
-        //             node.next = query_node.next.take();
-        //         }
-        //     }
-        //     it = node.next.as_mut();
-        // }
-        // let supposed_node = list.head.as_ref();
-        // if let Some(node) = supposed_node {
-        //     assert_eq!(node.value, 3);
-        // }
+        list.erase_if(|val| *val == 3);
+        let supposed_node = list.head.as_ref().and_then(|x| x.next.as_ref());
+        assert_eq!(supposed_node.unwrap().value, 4);
+
+        list.erase_if(|val| *val == 7);
+        let supposed_node = list
+            .head
+            .as_ref()
+            .and_then(|x| x.next.as_ref().and_then(|x| x.next.as_ref()));
+        assert_eq!(supposed_node.is_none(), true);
+
+        list.erase_if(|val| *val == 1);
+        let supposed_node = list.head.as_ref();
+        assert_eq!(supposed_node.unwrap().value, 4);
+
+        list.erase_if(|val| *val == 4);
+        assert_eq!(list.size(), 0);
 
         list.clear();
         assert_eq!(list.empty(), true);

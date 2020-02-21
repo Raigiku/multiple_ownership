@@ -58,24 +58,37 @@ impl<T> SinglyLinkedList<T> {
         *self = Self::new();
     }
 
-    pub fn insert_after(&mut self, new_value: T, predicate: impl Fn(&T) -> bool) {
+    pub fn insert_if(&mut self, new_value: T, predicate: impl Fn(&T) -> bool) {
         let mut it = self.head.as_mut();
         while let Some(node) = it {
             if predicate(&node.value) {
                 let new_node = Some(Box::new(Node::new(new_value, node.next.take())));
                 node.next = new_node;
+                self.size += 1;
                 break;
             }
             it = node.next.as_mut();
         }
     }
 
-    pub fn erase_after(&mut self, predicate: impl Fn(&T) -> bool) {
+    pub fn erase_if(&mut self, predicate: impl Fn(&T) -> bool) {
+        if let Some(head) = self.head.as_mut() {
+            if predicate(&head.value) {
+                if let Some(x) = head.next.take() {
+                    *head = x;
+                    self.size -= 1;
+                    return;
+                } else {
+                    self.clear();
+                }
+            }
+        }
         let mut it = self.head.as_mut();
         while let Some(node) = it {
             if let Some(ref mut query_node) = node.next {
                 if predicate(&query_node.value) {
                     node.next = query_node.next.take();
+                    self.size -= 1;
                 }
             }
             it = node.next.as_mut();
