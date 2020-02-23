@@ -158,9 +158,5 @@ mod tests {
 
         list.clear();
         assert_eq!(list.empty(), true);
-
-        list.push_back(7);
-        list.insert_if(1, |val| *val == 7);
-        assert_eq!(list.size(), 2);
     }
 }
