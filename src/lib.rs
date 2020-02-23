@@ -1,4 +1,6 @@
 #[allow(dead_code)]
+mod doubly_linked_list;
+#[allow(dead_code)]
 mod queue;
 #[allow(dead_code)]
 mod singly_linked_list;
@@ -7,6 +9,7 @@ mod stack;
 
 #[cfg(test)]
 mod tests {
+    use crate::doubly_linked_list::DoublyLinkedList;
     use crate::queue::Queue;
     use crate::singly_linked_list::SinglyLinkedList;
     use crate::stack::Stack;
@@ -110,5 +113,54 @@ mod tests {
 
         list.clear();
         assert_eq!(list.empty(), true);
+    }
+
+    #[test]
+    fn test_doubly_linked_list() {
+        let mut list = DoublyLinkedList::new();
+
+        list.push_front(1);
+        list.push_front(2);
+        list.push_front(3);
+        assert_eq!(*list.front().unwrap(), 3);
+        assert_eq!(*list.back().unwrap(), 1);
+        assert_eq!(list.size(), 3);
+
+        assert_eq!(list.pop_front(), Some(Ok(3)));
+        assert_eq!(list.pop_front(), Some(Ok(2)));
+        assert_eq!(list.pop_front(), Some(Ok(1)));
+        assert_eq!(list.pop_front(), None);
+        assert_eq!(list.front().is_none(), true);
+        assert_eq!(list.back().is_none(), true);
+        assert_eq!(list.size(), 0);
+
+        list.push_back(7);
+        list.push_back(4);
+        list.push_back(1);
+        assert_eq!(*list.front().unwrap(), 7);
+        assert_eq!(*list.back().unwrap(), 1);
+        assert_eq!(list.size(), 3);
+
+        assert_eq!(list.pop_back(), Some(Ok(1)));
+        assert_eq!(list.pop_back(), Some(Ok(4)));
+        assert_eq!(list.pop_back(), Some(Ok(7)));
+        assert_eq!(list.pop_back(), None);
+        assert_eq!(list.front().is_none(), true);
+        assert_eq!(list.back().is_none(), true);
+        assert_eq!(list.size(), 0);
+
+        list.push_back(7);
+        list.push_back(0);
+        *list.front_mut().unwrap() = 3;
+        *list.back_mut().unwrap() = 9;
+        assert_eq!(*list.front_mut().unwrap(), 3);
+        assert_eq!(*list.back_mut().unwrap(), 9);
+
+        list.clear();
+        assert_eq!(list.empty(), true);
+
+        list.push_back(7);
+        list.insert_if(1, |val| *val == 7);
+        assert_eq!(list.size(), 2);
     }
 }
