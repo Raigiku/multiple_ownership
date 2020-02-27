@@ -83,6 +83,7 @@ impl<T> SinglyLinkedList<T> {
                 }
             }
         }
+        
         let mut it = self.head.as_mut();
         while let Some(node) = it {
             if let Some(ref mut query_node) = node.next {
